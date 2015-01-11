@@ -1,8 +1,10 @@
 #include "engine.h"
 
-using namespace glm;
-
 Engine::Engine() : m_window(NULL), m_vao(NULL), m_world(new World()) {}
+
+Engine::~Engine() {
+	delete m_world;
+}
 
 int Engine::initialize(int screenWidth, int screenHeight) {
 	if (!glfwInit()) {
@@ -33,24 +35,39 @@ int Engine::initialize(int screenWidth, int screenHeight) {
 	// Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(m_window, GLFW_STICKY_KEYS, GL_TRUE);
 
-	// == Tutorial 2 ==
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+
+	// View Matrix
+	m_viewMatrix = glm::lookAt(
+		glm::vec3(1, 0.75, 0.75),		// Camera is at (4,3,3), in World Space
+		glm::vec3(0, 0, 0),		// and looks at the origin
+		glm::vec3(0, 1, 0));	// Head is up (set to 0,-1,0 to look upside-down)
+
+	m_projectionMatrix = glm::perspective(
+		60.0f,			// Field of View
+		4.0f / 3.0f,	// Ratio
+		0.1f,			// Near plane
+		100.0f);		// Far plane
+
+	m_viewProjectionMatrix = m_projectionMatrix*m_viewMatrix;
 
 	// Initialize the Vertex Array Object (VAO)
 	glGenVertexArrays(1, &m_vao);
 	glBindVertexArray(m_vao);
 
 	// Load the "world"
+	GLfloat vertices[9] = { -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f };
+
 	m_world->initialize();
-	m_world->updateVertices();
+	m_world->updateVertices(sizeof(vertices)/sizeof(*vertices), vertices);
 
 	return 0;
 }
 
-void Engine::loop() const {
+void Engine::loop() {
 	do {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		m_world->draw();
+		m_world->draw(m_viewProjectionMatrix);
 		glfwSwapBuffers(m_window);
 		glfwPollEvents();
 	} while (glfwGetKey(m_window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(m_window) == 0);

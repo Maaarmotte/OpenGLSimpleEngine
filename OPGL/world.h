@@ -15,14 +15,16 @@
 #include "shader.h"
 
 class World {
-	GLfloat *m_vertices;
+	std::vector<GLfloat> m_vertices;
 	GLuint m_vertexbuffer;
 	Shader *m_shader;
+	glm::mat4 m_modelMatrix;
 
 public:
+	~World();
 	void initialize();
-	void updateVertices();
-	void draw() const;
+	void updateVertices(const unsigned int size, const GLfloat *vertices);
+	void draw(glm::mat4& projectionViewMatrix) const;
 };
 
 #endif
