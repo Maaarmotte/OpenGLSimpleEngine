@@ -3,7 +3,7 @@
 int main() {
 	Engine engine;
 
-	if (engine.initialize() < 0) {
+	if (engine.initialize(1024, 768) < 0) {
 		return EXIT_FAILURE;
 	}
 

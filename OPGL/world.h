@@ -1,5 +1,5 @@
-#ifndef OPGL_ENGINE_H
-#define OPGL_ENGINE_H 1
+#ifndef OPGL_WORLD_H
+#define OPGL_WORLD_H 1
 
 // C/C++ Standard Libraries
 #include <stdio.h>
@@ -12,17 +12,17 @@
 #include <glm/glm.hpp>
 
 // Program Includes
-#include "world.h"
+#include "shader.h"
 
-class Engine {
-	GLFWwindow *m_window;
-	World *m_world;
-	GLuint m_vao;
+class World {
+	GLfloat *m_vertices;
+	GLuint m_vertexbuffer;
+	Shader *m_shader;
 
 public:
-	Engine();
-	int initialize(int screenWidth, int screenHeight);
-	void loop() const;
+	void initialize();
+	void updateVertices();
+	void draw() const;
 };
 
 #endif
