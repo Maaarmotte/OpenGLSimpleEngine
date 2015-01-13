@@ -16,7 +16,9 @@ int Engine::initialize(int screenWidth, int screenHeight) {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //We don't want the old OpenGL 
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //We don't want the old OpenGL
+
+	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
 	// Open a window and create its OpenGL context 
 	m_window = glfwCreateWindow(screenWidth, screenHeight, "GLFW Window", NULL, NULL);
@@ -28,12 +30,12 @@ int Engine::initialize(int screenWidth, int screenHeight) {
 	glfwMakeContextCurrent(m_window); // Initialize GLEW 
 	glewExperimental = true; // Needed in core profile 
 	if (glewInit() != GLEW_OK) {
-		fprintf(stderr, "Failed to initialize GLEW\n");
+		std::cerr << "Failed to initialize GLEW" << std::endl;
 		return EXIT_FAILURE;
 	}
 
 	// Ensure we can capture the escape key being pressed below
-	glfwSetInputMode(m_window, GLFW_STICKY_KEYS, GL_TRUE);
+	//glfwSetInputMode(m_window, GLFW_STICKY_KEYS, GL_TRUE);
 
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 

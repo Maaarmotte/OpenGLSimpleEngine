@@ -6,16 +6,15 @@
 #include <stdlib.h>
 #include <iostream>
 
-// OpenGL Related Libraries
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
+// OpenGL
+#include "opengl.h"
 
 // Program Includes
 #include "shader.h"
 
 class World {
 	std::vector<GLfloat> m_vertices;
+	GLuint m_vao;
 	GLuint m_vertexbuffer;
 	Shader *m_shader;
 	glm::mat4 m_modelMatrix;

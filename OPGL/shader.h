@@ -10,10 +10,8 @@
 #include <vector>
 #include <algorithm>
 
-// OpenGL Related Libraries
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
+// OpenGL
+#include "opengl.h"
 
 class Shader {
 	GLint m_programID;
@@ -21,9 +19,10 @@ class Shader {
 	GLint m_fragmentShaderID;
 
 public:
-	void loadFromFile(std::string vertexFile, std::string fragmentFile);
-	void loadFromString(std::string vertexString, std::string fragmentString);
-	void compile();
+	Shader();
+	void addShaderFile(int type, std::string filename);
+	void addShaderString(int type, std::string source);
+	void link();
 	void activate() const;
 	GLint getProgramID() const;
 };
