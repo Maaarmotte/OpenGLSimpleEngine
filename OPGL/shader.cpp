@@ -7,7 +7,7 @@ void Shader::addShaderFile(int type, std::string filename) {
 	std::string code;
 	std::ifstream stream(filename, std::ios::in);
 	if (stream.is_open()) {
-		std::string line = "";
+		std::string line;
 		while (getline(stream, line)) {
 			code += "\n" + line;
 		}
@@ -39,10 +39,9 @@ void Shader::addShaderString(int type, std::string source) {
 			m_fragmentShaderID = shader;
 			break;
 		default:
-			std::cout << "Warning! Unsupported shader, ignoring." << std::endl;
+			std::cerr << "Warning! Unsupported shader, ignoring." << std::endl;
 	}
 }
-
 
 void Shader::link() {
 	char log[512] = { 0 };
@@ -56,8 +55,8 @@ void Shader::link() {
 	glGetProgramiv(m_programID, GL_LINK_STATUS, &linked);
 
 	if (linked != GL_TRUE) {
-		glGetProgramInfoLog(m_programID, sizeof(log) / sizeof(*log), NULL, log);
-		std::cout << "Shader linking error:\n" << log << std::endl;
+		glGetProgramInfoLog(m_programID, sizeof(log)/sizeof(*log), NULL, log);
+		std::cerr << "Shader linking error:\n" << log << std::endl;
 	}
 
 	glDeleteShader(m_vertexShaderID);

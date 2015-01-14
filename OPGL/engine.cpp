@@ -59,9 +59,10 @@ int Engine::initialize(int screenWidth, int screenHeight) {
 
 	// Load the "world"
 	GLfloat vertices[9] = { -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f };
+	GLuint indices[3] = { 0, 1, 2 };
 
 	m_world->initialize();
-	m_world->updateVertices(sizeof(vertices)/sizeof(*vertices), vertices);
+	m_world->updateVertices(sizeof(vertices)/sizeof(*vertices), vertices, sizeof(indices)/sizeof(*indices), indices);
 
 	return 0;
 }

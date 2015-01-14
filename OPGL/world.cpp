@@ -15,6 +15,8 @@ void World::initialize() {
 	glBindVertexArray(m_vao);			// Bind it, we want to save to following data !
 	glGenBuffers(1, &m_vertexbuffer);					// Instantiate a new vertex buffer
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexbuffer);		// And bind it
+	glGenBuffers(1, &m_indexBuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer);
 
 	GLint position = glGetAttribLocation(m_shader->getProgramID(), "position");
 	glEnableVertexAttribArray(position);
@@ -22,12 +24,18 @@ void World::initialize() {
 	glBindVertexArray(0);
 }
 
-void World::updateVertices(const unsigned int size, const GLfloat *vertices) {
-	m_vertices.reserve(size);
-	m_vertices.insert(m_vertices.end(), vertices, vertices+size);
+void World::updateVertices(const unsigned int sizeVertices, const GLfloat *vertices, const unsigned int sizeIndices, const GLuint *indices) {
+	m_vertices.reserve(sizeVertices);
+	m_vertices.clear();
+	m_vertices.insert(m_vertices.begin(), vertices, vertices+sizeVertices);
 
-	glBindVertexArray(m_vao);		// The vertex buffer is already bound from initialize()
-	glBufferData(GL_ARRAY_BUFFER, m_vertices.size()*sizeof(m_vertices[0]), &m_vertices[0], GL_STATIC_DRAW);		// Send the vertices
+	m_indices.reserve(sizeIndices);
+	m_indices.clear();
+	m_indices.insert(m_indices.begin(), indices, indices + sizeIndices);
+
+	glBindVertexArray(m_vao);		// Buffers are already bound in the VAO
+	glBufferData(GL_ARRAY_BUFFER, m_vertices.size()*sizeof(m_vertices[0]), &m_vertices[0], GL_STATIC_DRAW);			// Fill the vertex buffer
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size()*sizeof(m_indices[0]), &m_indices[0], GL_STATIC_DRAW);	// Fill the index buffer
 	glBindVertexArray(0);
 }
 
@@ -35,11 +43,11 @@ void World::draw(glm::mat4& projectionViewMatrix) const {
 	glBindVertexArray(m_vao);
 	m_shader->activate();
 	
-	GLuint matrix = glGetUniformLocation(m_shader->getProgramID(), "MVP");
+	GLuint matrix = glGetUniformLocation(m_shader->getProgramID(), "mvp");
 	glm::mat4 mvp = projectionViewMatrix*m_modelMatrix;
 
 	glUniformMatrix4fv(matrix, 1, GL_FALSE, &mvp[0][0]);
-	glDrawArrays(GL_TRIANGLES, 0, 3);												// Starting from vertex 0; 3 vertices total -> 1 triangle
+	glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);		// Use uint indices with 0 offset from m_indices to draw m_indices.size() vertices into triangles
 
 	glBindVertexArray(0);
 }
