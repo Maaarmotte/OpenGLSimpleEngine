@@ -11,6 +11,7 @@
 
 // Program Includes
 #include "shader.h"
+#include "texture.h"
 
 class World {
 	std::vector<GLfloat> m_vertices;
@@ -20,6 +21,7 @@ class World {
 	GLuint m_indexBuffer;
 	Shader *m_shader;
 	glm::mat4 m_modelMatrix;
+	Texture* m_texture;
 
 public:
 	~World();

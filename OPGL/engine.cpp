@@ -1,12 +1,13 @@
 #include "engine.h"
 
-Engine::Engine() : m_window(NULL), m_vao(NULL), m_world(new World()) {}
+Engine::Engine() : m_window(NULL), m_world(new World()) {}
 
 Engine::~Engine() {
 	delete m_world;
 }
 
 int Engine::initialize(int screenWidth, int screenHeight) {
+	std::cout << "Initializing engine..." << std::endl;
 	if (!glfwInit()) {
 		std::cerr << "Failed to initialize GLFW" << std::endl;
 		return EXIT_FAILURE;
@@ -34,6 +35,9 @@ int Engine::initialize(int screenWidth, int screenHeight) {
 		return EXIT_FAILURE;
 	}
 
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+
 	// Ensure we can capture the escape key being pressed below
 	//glfwSetInputMode(m_window, GLFW_STICKY_KEYS, GL_TRUE);
 
@@ -41,26 +45,27 @@ int Engine::initialize(int screenWidth, int screenHeight) {
 
 	// View Matrix
 	m_viewMatrix = glm::lookAt(
-		glm::vec3(1, 0.75, 0.75),		// Camera is at (4,3,3), in World Space
+		glm::vec3(0, 0, 1),		// Camera is at (4,3,3), in World Space
 		glm::vec3(0, 0, 0),		// and looks at the origin
 		glm::vec3(0, 1, 0));	// Head is up (set to 0,-1,0 to look upside-down)
 
 	m_projectionMatrix = glm::perspective(
-		60.0f,			// Field of View
-		4.0f / 3.0f,	// Ratio
+		65.0f,			// Field of View
+		16.0f / 10.0f,	// Ratio
 		0.1f,			// Near plane
 		100.0f);		// Far plane
 
 	m_viewProjectionMatrix = m_projectionMatrix*m_viewMatrix;
 
-	// Initialize the Vertex Array Object (VAO)
-	glGenVertexArrays(1, &m_vao);
-	glBindVertexArray(m_vao);
+	// Load the "world"			// Vertices				// UVs
+	GLfloat vertices[20] = {	-1.0f,	-1.0f,	0.0f,	0.0f,	1.0f,
+								-1.0f,	1.0f,	0.0f,	0.0f,	0.0f,
+								1.0f,	-1.0f,	0.0f,	1.0f,	1.0f, 
+								1.0f,	1.0f,	0.0f,	1.0f,	0.0f };
 
-	// Load the "world"
-	GLfloat vertices[9] = { -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f };
-	GLuint indices[3] = { 0, 1, 2 };
+	GLuint indices[6] = { 0, 1, 3, 0, 2, 3 };
 
+	std::cout << "Initializing world..." << std::endl;
 	m_world->initialize();
 	m_world->updateVertices(sizeof(vertices)/sizeof(*vertices), vertices, sizeof(indices)/sizeof(*indices), indices);
 
@@ -68,10 +73,23 @@ int Engine::initialize(int screenWidth, int screenHeight) {
 }
 
 void Engine::loop() {
+	double t;
 	do {
+		t = glfwGetTime();
+		std::cout << "\rFPS: " << 1 / (t - m_drawTime);
+		m_drawTime = t;
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		this->setCameraPosition(0, 0, 1);
 		m_world->draw(m_viewProjectionMatrix);
 		glfwSwapBuffers(m_window);
 		glfwPollEvents();
 	} while (glfwGetKey(m_window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(m_window) == 0);
+}
+
+void Engine::setCameraPosition(GLdouble x, GLdouble y, GLdouble z) {
+	m_viewMatrix = glm::lookAt(
+		glm::vec3(x, y, z),		// Camera is at (4,3,3), in World Space
+		glm::vec3(0, 0, 0),		// and looks at the origin
+		glm::vec3(0, 1, 0));	// Head is up (set to 0,-1,0 to look upside-down)
+	m_viewProjectionMatrix = m_projectionMatrix*m_viewMatrix;
 }

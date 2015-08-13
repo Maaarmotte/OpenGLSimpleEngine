@@ -2,6 +2,7 @@
 
 World::~World() {
 	delete m_shader;
+	delete m_texture;
 }
 
 void World::initialize() {
@@ -20,7 +21,14 @@ void World::initialize() {
 
 	GLint position = glGetAttribLocation(m_shader->getProgramID(), "position");
 	glEnableVertexAttribArray(position);
-	glVertexAttribPointer(position, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glVertexAttribPointer(position, 3, GL_FLOAT, GL_FALSE, 5*sizeof(GLfloat), (const GLvoid*)0);
+
+	GLint vertexUV = glGetAttribLocation(m_shader->getProgramID(), "vertexUV");
+	glEnableVertexAttribArray(vertexUV);
+	glVertexAttribPointer(vertexUV, 2, GL_FLOAT, GL_FALSE, 5*sizeof(GLfloat), (const GLvoid*)(3*sizeof(GLfloat)));
+	
+	m_texture = new Texture("chat.tga");
+	
 	glBindVertexArray(0);
 }
 
@@ -36,11 +44,14 @@ void World::updateVertices(const unsigned int sizeVertices, const GLfloat *verti
 	glBindVertexArray(m_vao);		// Buffers are already bound in the VAO
 	glBufferData(GL_ARRAY_BUFFER, m_vertices.size()*sizeof(m_vertices[0]), &m_vertices[0], GL_STATIC_DRAW);			// Fill the vertex buffer
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size()*sizeof(m_indices[0]), &m_indices[0], GL_STATIC_DRAW);	// Fill the index buffer
+
 	glBindVertexArray(0);
 }
 
 void World::draw(glm::mat4& projectionViewMatrix) const {
 	glBindVertexArray(m_vao);
+	
+	m_texture->bind(GL_TEXTURE0);
 	m_shader->activate();
 	
 	GLuint matrix = glGetUniformLocation(m_shader->getProgramID(), "mvp");
