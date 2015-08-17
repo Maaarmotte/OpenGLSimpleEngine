@@ -34,6 +34,9 @@
     <ClCompile Include="texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine.h">
@@ -51,6 +54,9 @@
     <ClInclude Include="texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="world_vert.glsl">
@@ -62,6 +68,12 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="chat.tga">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="chat.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="chat.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

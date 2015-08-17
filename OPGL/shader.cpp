@@ -1,8 +1,8 @@
 #include "shader.h"
 
-Shader::Shader() : m_vertexShaderID(0), m_fragmentShaderID(0) {}
+Shader::Shader() : m_vertexShaderID(-1), m_fragmentShaderID(-1), m_programID(-1) {}
 
-void Shader::addShaderFile(int type, std::string filename) {
+void Shader::addShaderFile(int type, const std::string filename) {
 	std::cout << "Loading shader: " << filename << std::endl;
 	std::string code;
 	std::ifstream stream(filename, std::ios::in);
@@ -15,7 +15,7 @@ void Shader::addShaderFile(int type, std::string filename) {
 	addShaderString(type, code);
 }
 
-void Shader::addShaderString(int type, std::string source) {
+void Shader::addShaderString(int type, const std::string source) {
 	GLint shader = glCreateShader(type);
 	char const *sourcePtr = source.c_str();
 	char log[512] = { 0 };

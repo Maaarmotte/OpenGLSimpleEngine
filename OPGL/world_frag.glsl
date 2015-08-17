@@ -4,6 +4,6 @@ out vec3 color;
 
 uniform sampler2D texSampler;
  
-void main(){
+void main() {
     color = texture(texSampler, uv).rgb;
 }

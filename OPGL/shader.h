@@ -20,8 +20,8 @@ class Shader {
 
 public:
 	Shader();
-	void addShaderFile(int type, std::string filename);
-	void addShaderString(int type, std::string source);
+	void addShaderFile(int type, const std::string filename);
+	void addShaderString(int type, const std::string source);
 	void link();
 	void activate() const;
 	GLint getProgramID() const;

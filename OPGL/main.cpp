@@ -1,13 +1,17 @@
 #include "engine.h"
 
 int main() {
-	Engine engine;
+	Engine *engine;
 
-	if (engine.initialize(1280, 800) < 0) {
+	try {
+		engine = new Engine(1280, 800);
+	}
+	catch (const char* msg) {
+		std::cerr << "Error: " << msg << std::endl;
 		return EXIT_FAILURE;
 	}
 
-	engine.loop();
+	engine->loop();
 
-	return 0;
+	return EXIT_SUCCESS;
 }

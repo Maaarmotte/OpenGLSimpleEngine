@@ -6,27 +6,25 @@
 #include <stdlib.h>
 #include <iostream>
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 // OpenGL
 #include "opengl.h"
 
 // Program Includes
 #include "world.h"
+#include "camera.h"
 
 class Engine {
 	GLFWwindow *m_window;
-	World *m_world;
-	glm::mat4 m_viewMatrix;
-	glm::mat4 m_projectionMatrix;
-	glm::mat4 m_viewProjectionMatrix;
+	World m_world;
+	Camera m_camera;
 	GLdouble m_drawTime;
-	std::vector<GLfloat> m_camPos;
 
 public:
-	Engine();
-	~Engine();
-	int initialize(int screenWidth, int screenHeight);
+	Engine(int screenWidth, int screenHeight);
 	void loop();
-	void setCameraPosition(GLdouble x, GLdouble y, GLdouble z);
 };
 
 #endif

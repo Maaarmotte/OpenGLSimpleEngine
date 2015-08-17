@@ -14,13 +14,13 @@
 // Program Includes
 
 class Texture {
-	GLuint m_textureID;
+	GLint m_textureID;
 	std::string m_path;
 
 public:
-	Texture(std::string path);
-	~Texture();
-	void bind(GLuint slot);
+	Texture();
+	void load(std::string path);
+	void bind(GLuint slot) const;
 };
 
 #endif

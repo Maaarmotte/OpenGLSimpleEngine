@@ -19,13 +19,13 @@ class World {
 	GLuint m_vao;
 	GLuint m_vertexbuffer;
 	GLuint m_indexBuffer;
-	Shader *m_shader;
 	glm::mat4 m_modelMatrix;
-	Texture* m_texture;
+	Shader m_shader;
+	Texture m_texture;
 
 public:
-	~World();
-	void initialize();
+	World();
+	void load();
 	void updateVertices(const unsigned int size, const GLfloat *vertices, const unsigned int sizeIndices, const GLuint *indices);
 	void draw(glm::mat4& projectionViewMatrix) const;
 };
